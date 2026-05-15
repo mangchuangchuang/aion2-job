@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>永恒之塔2 职业更新增强削弱对比站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            color: #333;
+            padding: 15px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .title {
+            text-align: center;
+            color: #c41e3a;
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        .box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .box-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        .row-flex {
+            display: flex;
+            gap: 10px;
+        }
+        .row-flex select {
+            flex: 1;
+        }
+        .table-box {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+        th {
+            background: #2c3e50;
+            color: #fff;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 15px;
+        }
+        td {
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .up {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .down {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .normal {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .t0 { color: #e74c3c; font-weight: bold; }
+        .t1 { color: #2980b9; font-weight: bold; }
+        .t2 { color: #f39c12; font-weight: bold; }
+        .t3 { color: #7f8c8d; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            .title { font-size: 20px; }
+            th, td { padding: 8px 5px; font-size: 13px; }
+            .row-flex { flex-direction: column; gap:0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">永恒之塔2 职业平衡对比总站</h1>
+
+        <div class="box">
+            <div class="box-title">版本选择 + 职业筛选</div>
+            <select id="versionSelect">
+                <option value="20260515">2026-05-15 最新平衡</option>
+                <option value="20260422">2026-04-22 职业微调</option>
+                <option value="20260325">2026-03-25 战斗重制</option>
+                <option value="20260122">2026-01-22 S2赛季大改</option>
+                <option value="20251224">2025-12-24 年末调整</option>
+            </select>
+            <select id="jobFilter">
+                <option value="all">全部职业</option>
+                <option value="剑星">剑星</option>
+                <option value="守护星">守护星</option>
+                <option value="治愈星">治愈星</option>
+                <option value="护法星">护法星</option>
+                <option value="魔道星">魔道星</option>
+                <option value="弓星">弓星</option>
+                <option value="杀星">杀星</option>
+                <option value="精灵星">精灵星</option>
+            </select>
+        </div>
+
+        <div class="box">
+            <div class="box-title">双版本强弱对比</div>
+            <div class="row-flex">
+                <select id="verA">
+                    <option value="20260515">2026-05-15</option>
+                    <option value="20260422">2026-04-22</option>
+                    <option value="20260325">2026-03-25</option>
+                    <option value="20260122">2026-01-22</option>
+                    <option value="20251224">2025-12-24</option>
+                </select>
+                <select id="verB">
+                    <option value="20260422">2026-04-22</option>
+                    <option value="20260515">2026-05-15</option>
+                    <option value="20260325">2026-03-25</option>
+                    <option value="20260122">2026-01-22</option>
+                    <option value="20251224">2025-12-24</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>职业</th>
+                        <th>改动情况</th>
+                        <th>核心调整</th>
+                        <th>PVE</th>
+                        <th>PVP</th>
+                        <th>综合强度</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        const versionData = {
+            "20260515": [
+                {name:"剑星",type:"大幅削弱",change:"吸血比例7%降至2%，移除防御被动加成",pve:"↓↓",pvp:"↓",tier:"T3"},
+                {name:"守护星",type:"大幅增强",change:"暴击、生命值、仇恨值全面上调",pve:"↑↑",pvp:"↑↑",tier:"T0"},
+                {name:"治愈星",type:"小幅增强",change:"施法速度提升，移动复活优化",pve:"↑",pvp:"-",tier:"T1"},
+                {name:"护法星",type:"重做调整",change:"辅助能力小幅削弱，PVP爆发加强",pve:"↓",pvp:"↑↑",tier:"T1"},
+                {name:"魔道星",type:"增强",change:"PVE技能伤害提升，大招CD缩短",pve:"↑↑",pvp:"↑",tier:"T1"},
+                {name:"弓星",type:"增强",change:"支援效果常驻，基础伤害上调",pve:"↑",pvp:"↑↑",tier:"T0"},
+                {name:"杀星",type:"微调增强",change:"解增益技能伤害小幅提升",pve:"-",pvp:"↑",tier:"T2"},
+                {name:"精灵星",type:"削弱",change:"召唤兽属性BUG修复变相削弱",pve:"↓",pvp:"↓",tier:"T3"}
+            ],
+            "20260422": [
+                {name:"剑星",type:"削弱",change:"基础技能整体伤害下调10%",pve:"↓",pvp:"↓",tier:"T2"},
+                {name:"守护星",type:"增强",change:"常驻减伤效果提升5%",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"治愈星",type:"无变化",change:"本次无任何职业调整",pve:"-",pvp:"-",tier:"T1"},
+                {name:"护法星",type:"增强",change:"全队BUFF效果小幅提升",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"魔道星",type:"无变化",change:"本次无任何职业调整",pve:"-",pvp:"-",tier:"T1"},
+                {name:"弓星",type:"削弱",change:"暴击伤害系数下调",pve:"↓",pvp:"↓",tier:"T1"},
+                {name:"杀星",type:"增强",change:"突进技能冷却时间缩短",pve:"↑",pvp:"↑↑",tier:"T1"},
+                {name:"精灵星",type:"无变化",change:"本次无任何职业调整",pve:"-",pvp:"-",tier:"T2"}
+            ],
+            "20260325": [
+                {name:"剑星",type:"增强",change:"新增破防烙印技能，输出提升",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"守护星",type:"重做增强",change:"坦克生存与拉仇恨机制重做",pve:"↑↑",pvp:"↑↑",tier:"T0"},
+                {name:"治愈星",type:"削弱",change:"群体治疗量整体下调",pve:"↓",pvp:"↓",tier:"T2"},
+                {name:"护法星",type:"削弱",change:"全队增益数值降低",pve:"↓",pvp:"↓",tier:"T2"},
+                {name:"魔道星",type:"大幅增强",change:"大范围AOE伤害全面拔高",pve:"↑↑",pvp:"↑",tier:"T0"},
+                {name:"弓星",type:"大幅增强",change:"远程输出上限提高",pve:"↑↑",pvp:"↑↑",tier:"T0"},
+                {name:"杀星",type:"削弱",change:"隐身持续时间缩短",pve:"-",pvp:"↓",tier:"T2"},
+                {name:"精灵星",type:"增强",change:"召唤兽基础伤害提升",pve:"↑",pvp:"↑",tier:"T2"}
+            ],
+            "20260122": [
+                {name:"剑星",type:"重做",change:"连招机制改版，上手难度提升",pve:"↑",pvp:"↓",tier:"T2"},
+                {name:"守护星",type:"增强",change:"基础血量与防御大幅加高",pve:"↑↑",pvp:"↑↑",tier:"T0"},
+                {name:"治愈星",type:"增强",change:"单体治疗量上调",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"护法星",type:"大幅削弱",change:"核心BUFF比例大砍",pve:"↓↓",pvp:"↓",tier:"T3"},
+                {name:"魔道星",type:"削弱",change:"施法动作变慢",pve:"↓",pvp:"↓",tier:"T2"},
+                {name:"弓星",type:"重做增强",change:"技能输出循环重构",pve:"↑↑",pvp:"↑",tier:"T1"},
+                {name:"杀星",type:"大幅增强",change:"背刺伤害加成提高",pve:"↑",pvp:"↑↑",tier:"T0"},
+                {name:"精灵星",type:"削弱",change:"DOT持续伤害下调",pve:"↓",pvp:"↓↓",tier:"T3"}
+            ],
+            "20251224": [
+                {name:"剑星",type:"增强",change:"技能出招动作加速",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"守护星",type:"小幅增强",change:"格挡概率提升",pve:"↑",pvp:"-",tier:"T1"},
+                {name:"治愈星",type:"无变化",change:"无调整",pve:"-",pvp:"-",tier:"T1"},
+                {name:"护法星",type:"增强",change:"真言持续时间延长",pve:"↑",pvp:"↑",tier:"T1"},
+                {name:"魔道星",type:"增强",change:"控制技能时间微增",pve:"↑",pvp:"↑↑",tier:"T1"},
+                {name:"弓星",type:"削弱",change:"基础射程略微缩短",pve:"↓",pvp:"↓",tier:"T2"},
+                {name:"杀星",type:"无变化",change:"无调整",pve:"-",pvp:"-",tier:"T2"},
+                {name:"精灵星",type:"增强",change:"召唤兽血量提升",pve:"↑",pvp:"↑",tier:"T2"}
+            ]
+        };
+
+        let nowVer = "20260515";
+        let jobSel = "all";
+
+        function renderTable(){
+            const body = document.getElementById("tableBody");
+            body.innerHTML = "";
+            let list = versionData[nowVer];
+            if(jobSel !== "all") list = list.filter(x=>x.name === jobSel);
+            list.forEach(item=>{
+                let typeClass = item.type.includes("增强") ? "up" : item.type.includes("削弱") ? "down" : "normal";
+                let tierClass = "t" + item.tier.charAt(1);
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td class="${typeClass}">${item.type}</td>
+                    <td style="text-align:left">${item.change}</td>
+                    <td>${item.pve}</td>
+                    <td>${item.tier}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        document.getElementById("versionSelect").onchange = e=>{nowVer=e.target.value;renderTable();};
+        document.getElementById("jobFilter").onchange = e=>{jobSel=e.target.value;renderTable();};
+        renderTable();
+    </script>
+</body>
+</html>
